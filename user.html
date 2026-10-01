@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard Siswa</title><link rel="stylesheet" href="style.css">
+<style>
+/* Semua gaya khusus halaman siswa ada di sini, jadi style.css (dipakai admin) tidak berubah */
+body.stu{--ink:#17335c;--teal:#3b8cf5;--teal2:#2c78e0;--red:#e03e52;--mut:#5d7190;--line:#e3eaf4;
+  background:radial-gradient(1100px 480px at 88% -8%,#e3eeff 0,transparent 62%),#f5f8fd}
+
+/* ---------- Navbar ---------- */
+.stu .nav{background:linear-gradient(90deg,#1f3f63,#264b73);height:78px;padding:0 40px;box-shadow:0 6px 24px rgba(23,51,92,.18);animation:navdown .6s cubic-bezier(.2,.8,.2,1) backwards}
+.stu .nav>b{display:flex;align-items:center;gap:14px;font-size:21px;font-weight:700;letter-spacing:-.01em}
+.stu .nav>b svg{width:46px;height:46px}
+.stu .right{gap:18px}
+.chipw{position:relative}
+.chip{display:flex;align-items:center;gap:10px;background:none;border:0;color:#fff;cursor:pointer;padding:5px 10px 5px 5px;border-radius:999px;font-weight:600;font-size:16px;transition:background .2s}
+.chip:hover,.chipw.open .chip{background:rgba(255,255,255,.12)}
+.chip:focus-visible{outline:2px solid #9cc7ff;outline-offset:2px}
+.chip .ava{width:38px;height:38px;border-radius:50%;background:#fff;color:#3b8cf5;display:grid;place-items:center}
+.chip .ava svg{width:22px;height:22px}
+.chip .chev{width:15px;height:15px;transition:transform .25s}
+.chipw.open .chev{transform:rotate(180deg)}
+.menu{position:absolute;right:0;top:56px;min-width:190px;background:#fff;border-radius:14px;box-shadow:0 18px 50px rgba(23,51,92,.25);padding:8px;display:none;transform-origin:top right}
+.chipw.open .menu{display:block;animation:pop .2s}
+.stu .menu #out{display:flex;align-items:center;gap:10px;width:100%;background:#fdeff1;color:var(--red);padding:11px 14px;font-size:14px;border-radius:10px}
+.stu .menu #out:hover{background:#fbe0e4}
+.menu #out svg{width:18px;height:18px}
+
+/* ---------- Layout ---------- */
+.stu .wrap{max-width:1200px;padding:40px 24px 60px}
+.stu .prof{grid-template-columns:340px 1fr;gap:28px;align-items:start;animation:none}
+.stu .prof>*{animation:rise .7s cubic-bezier(.2,.8,.2,1) backwards}
+.stu .prof>:nth-child(2){animation-delay:.12s}
+
+/* ---------- Kartu kiri ---------- */
+.pcard{background:#fff;border-radius:22px;box-shadow:0 10px 40px rgba(23,51,92,.08);overflow:hidden;text-align:center;padding:0 28px 28px}
+.banner{height:132px;margin:0 -28px;position:relative;overflow:hidden;background:linear-gradient(135deg,#3f93f7,#86bcfc)}
+.banner svg{position:absolute;left:0;bottom:0;width:200%;height:100%}
+.banner .w1{animation:wave 10s linear infinite}
+.banner .w2{animation:wave 16s linear infinite reverse}
+.banner::after{content:"";position:absolute;left:-15%;right:-15%;bottom:-88px;height:120px;background:#fff;border-radius:50%}
+.avatar{width:124px;height:124px;border-radius:50%;background:linear-gradient(135deg,#17969f,#0e7c86);color:#fff;font-size:52px;font-weight:600;display:grid;place-items:center;margin:-70px auto 0;position:relative;border:6px solid #fff;box-shadow:0 8px 24px rgba(14,124,134,.28);animation:avpop .7s .3s cubic-bezier(.2,1.4,.4,1) backwards}
+.pcard h2{font-size:26px;font-weight:700;margin-top:16px}
+.pcard .mail{color:var(--mut);font-size:15px;margin:6px 0 22px;word-break:break-all}
+.pcard hr{border:0;border-top:1px solid var(--line);margin:0 0 22px}
+.pbtn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:14px;padding:15px;color:#fff;font-weight:700;font-size:16px;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.pbtn.blue{background:linear-gradient(180deg,#4a9aff,#3585f2);box-shadow:0 8px 20px rgba(59,140,245,.32)}
+.pbtn.red{background:linear-gradient(180deg,#ea4a5d,#d93a4e);box-shadow:0 8px 20px rgba(224,62,82,.28);margin-top:14px}
+.pbtn:hover{transform:translateY(-3px)}
+.pbtn:active{transform:scale(.97)}
+.pbtn:focus-visible{outline:3px solid #b9d7ff;outline-offset:2px}
+.pbtn svg{width:21px;height:21px;transition:transform .3s}
+.pbtn:hover svg{transform:scale(1.15) rotate(-8deg)}
+.pbtn::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);transform:skewX(-20deg);transition:left .6s}
+.pbtn:hover::after{left:130%}
+
+/* ---------- Kartu kanan ---------- */
+.icard{background:#fff;border-radius:22px;box-shadow:0 10px 40px rgba(23,51,92,.08);padding:26px 26px 14px}
+.ihead{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+.ihead .ico{width:58px;height:58px;border-radius:50%;background:#e8f1fd;color:#3b8cf5;display:grid;place-items:center;flex:none}
+.ihead .ico svg{width:28px;height:28px}
+.ihead h3{font-size:26px;font-weight:700}
+.ihead p{color:var(--mut);font-size:15px;margin-top:3px}
+.irow{display:grid;grid-template-columns:52px 215px 1fr;align-items:center;background:#f3f6fb;border-radius:16px;padding:7px 22px 7px 7px;margin-bottom:14px;min-height:62px;animation:slidein .55s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i) * 90ms + 260ms);transition:transform .25s,background .25s,box-shadow .25s}
+.irow:hover{transform:translateX(6px);background:#eaf2fe;box-shadow:0 6px 18px rgba(59,140,245,.12)}
+.irow .ri{width:42px;height:42px;border-radius:50%;background:#e4ecf8;color:var(--ink);display:grid;place-items:center;transition:background .25s,color .25s}
+.irow:hover .ri{background:#3b8cf5;color:#fff}
+.irow .ri svg{width:21px;height:21px}
+.irow span{color:var(--mut);font-size:16px}
+.irow b{font-size:16px;font-weight:700;word-break:break-word}
+.irow.noanim{animation:none}
+.irow.flash{animation:flash 1.8s}
+.skel{height:62px;border-radius:16px;margin-bottom:14px}
+.sk,.skel{background:linear-gradient(90deg,#e8eef7 25%,#f6f9fd 50%,#e8eef7 75%);background-size:200% 100%;animation:shim 1.2s linear infinite}
+i.sk{display:inline-block;border-radius:8px;font-style:normal;vertical-align:middle}
+
+/* ---------- Keyframes ---------- */
+@keyframes navdown{from{opacity:0;transform:translateY(-100%)}}
+@keyframes wave{to{transform:translateX(-50%)}}
+@keyframes avpop{from{opacity:0;transform:scale(.3)}}
+@keyframes slidein{from{opacity:0;transform:translateX(34px)}}
+@keyframes shim{to{background-position:-200% 0}}
+@keyframes flash{0%,60%{background:#fff3d6;box-shadow:0 0 0 3px #f2c36b}100%{background:#f3f6fb;box-shadow:none}}
+
+/* ---------- Mobile ---------- */
+@media(max-width:860px){.stu .prof{grid-template-columns:1fr}.pcard{max-width:420px;width:100%;margin:0 auto}}
+@media(max-width:640px){
+  .stu .nav{height:68px;padding:0 16px}.stu .nav>b{font-size:17px}.stu .nav>b svg{width:36px;height:36px}
+  .chip .cn{display:none}.stu .wrap{padding:22px 14px 50px}
+  .irow{grid-template-columns:52px 1fr;row-gap:1px}.irow .ri{grid-row:1/3}.irow span{font-size:13px}
+  .ihead h3{font-size:22px}.ihead p{font-size:14px}
+}
+</style></head>
+<body class="stu">
+<div id="nav"></div>
+<div class="wrap">
+  <div class="prof">
+    <div class="pcard">
+      <div class="banner">
+        <svg viewBox="0 0 1200 130" preserveAspectRatio="none" class="w1"><path fill="rgba(255,255,255,.2)" d="M0 60C100 20 200 20 300 60S500 100 600 60C700 20 800 20 900 60S1100 100 1200 60V130H0Z"/></svg>
+        <svg viewBox="0 0 1200 130" preserveAspectRatio="none" class="w2"><path fill="rgba(255,255,255,.28)" d="M0 85C100 55 200 55 300 85S500 115 600 85C700 55 800 55 900 85S1100 115 1200 85V130H0Z"/></svg>
+      </div>
+      <div class="avatar" id="av"></div>
+      <h2 id="nm"><i class="sk" style="width:180px;height:26px"></i></h2>
+      <p class="mail" id="em"><i class="sk" style="width:200px;height:16px"></i></p>
+      <hr>
+      <button class="pbtn blue" id="edit"></button>
+      <button class="pbtn red" id="del"></button>
+    </div>
+    <div class="icard">
+      <div class="ihead"><div class="ico" id="hico"></div>
+        <div><h3>Profil pribadi</h3><p>Informasi lengkap tentang data diri Anda</p></div></div>
+      <div id="info"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>
+const S = (p, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${extra}>${p}</svg>`;
+const IC = {
+  cap: `<svg viewBox="0 0 64 64"><path d="M32 8 4 22l28 14 28-14L32 8Z" fill="#3b8cf5"/><path d="M14 31v13c0 4 8 9 18 9s18-5 18-9V31L32 40 14 31Z" fill="#2f7be0"/><path d="M56 25v18" stroke="#6db0ff" stroke-width="3" stroke-linecap="round"/></svg>`,
+  person: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2"/><path d="M4 21c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5H4Z"/></svg>`,
+  chev: S('<path d="m6 9 6 6 6-6"/>', 'class="chev"'),
+  exit: S('<path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M16 8l4 4-4 4M20 12H9"/>'),
+  id: S('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.5-1.5 1.7-2 3-2s2.5.5 3 2M14 10h4M14 14h4"/>'),
+  cal: S('<rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"/>'),
+  mars: S('<circle cx="10" cy="14" r="5"/><path d="M14 10l6-6M15 4h5v5"/>'),
+  venus: S('<circle cx="12" cy="9" r="5"/><path d="M12 14v8M9 18h6"/>'),
+  hash: S('<path d="M5 9h14M5 15h14M10 4 8 20M16 4l-2 16"/>'),
+  pin: S('<path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/>')
+};
+$('#hico').innerHTML = IC.person;
+$('#edit').innerHTML = IC.person + 'Edit profil';
+$('#del').innerHTML = IC.exit + 'Hapus akun';
+
+let me, rendered = false;
+function render(old) {
+  $('#av').textContent = me.name.charAt(0).toUpperCase();
+  $('#nm').textContent = me.name; $('#em').textContent = me.email;
+  const cn = document.querySelector('.cn'); if (cn) cn.textContent = me.name;
+  const g = (me.gender || '').toUpperCase();
+  const rows = [['NISN', 'nisn', me.nisn, IC.id], ['Tempat, tanggal lahir', 'ttl', me.ttl, IC.cal],
+                ['Gender', 'gender', g, g == 'FEMALE' ? IC.venus : IC.mars], ['No. HP', 'phone', me.phone, IC.hash],
+                ['Alamat', 'address', me.address, IC.pin]];
+  $('#info').innerHTML = rows.map(([k, f, v, ic], i) => {
+    const cls = !rendered ? '' : (old && String(old[f] ?? '').toUpperCase() !== String(me[f] ?? '').toUpperCase() ? 'noanim flash' : 'noanim');
+    return `<div class="irow ${cls}" style="--i:${i}"><div class="ri">${ic}</div><span>${k}</span><b>${esc(f == 'gender' ? v : me[f]) || '-'}</b></div>`;
+  }).join('');
+  rendered = true;
+}
+async function loadMe() {
+  const old = me;
+  me = await api('me');
+  if (me.role != 'user') return location = 'login.html';
+  render(old);
+}
+
+// Navbar bawaan (lonceng + polling) dipakai ulang, tampilannya disesuaikan
+function dressNav(name) {
+  const nav = document.querySelector('.nav'), right = nav.querySelector('.right');
+  nav.querySelector('b').innerHTML = IC.cap + '<span>Dashboard Siswa</span>';
+  right.querySelector('.hide-m')?.remove();
+  const out = $('#out'); out.innerHTML = IC.exit + 'Keluar';
+  const w = document.createElement('div'); w.className = 'chipw';
+  w.innerHTML = `<button class="chip" id="chip" aria-haspopup="true"><span class="ava">${IC.person}</span><span class="cn">${esc(name)}</span>${IC.chev}</button><div class="menu" id="menu"></div>`;
+  right.append(w); $('#menu').append(out);
+  $('#chip').onclick = e => { e.stopPropagation(); w.classList.toggle('open'); };
+  document.addEventListener('click', e => { if (!e.target.closest('.chipw')) w.classList.remove('open'); });
+}
+
+$('#edit').onclick = () => openForm({title: 'Edit profil', data: me, pwReq: false,
+  onSave: b => api('update', b).then(r => { if (!r.error) loadMe(); return r; })});
+$('#del').onclick = () => {
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = `<form class="box" style="max-width:420px"><h3>Hapus akun?</h3>
+    <p style="color:var(--mut);font-size:14px;margin-bottom:16px">Akun dan seluruh datamu akan dihapus permanen dan tidak bisa dikembalikan. Masukkan password untuk konfirmasi.</p>
+    <label>Password<input name="password" type="password" required autocomplete="current-password"></label>
+    <div class="act"><button type="button" class="btn ghost">Batal</button><button class="btn red">Ya, hapus akunku</button></div></form>`;
+  document.body.append(m);
+  const fm = m.querySelector('form');
+  fm.querySelector('.ghost').onclick = () => m.remove();
+  fm.onsubmit = async e => {
+    e.preventDefault();
+    const r = await api('delete_self', Object.fromEntries(new FormData(fm)));
+    if (r.error) return toast(r.error, 'err');
+    sessionStorage.setItem('msg', 'Akunmu berhasil dihapus.'); location = 'login.html';
+  };
+};
+window.onNewNotif = loadMe;   // kalau admin mengubah datamu, profil ikut diperbarui (baris yang berubah berkedip)
+loadMe().then(() => { if (me.name) { navbar('user', me.name); dressNav(me.name); } });
+</script></body></html>

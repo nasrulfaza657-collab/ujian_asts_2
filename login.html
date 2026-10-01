@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Masuk · Portal Data Siswa</title><link rel="stylesheet" href="style.css">
+<style>
+/* Semua gaya halaman login ada di file ini; style.css hanya dipakai untuk font & posisi toast */
+body.lg{--ink:#14325c;--mut:#5a6f8c;--blue:#1565d8;--blue2:#0f52b8;--cyan:#25c9f2;--line:#d6e3f5;--red:#d93a4e;background:#f3f8ff;color:var(--ink)}
+.lg *{margin:0}
+.lg-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+
+/* ================= KIRI ================= */
+.left{position:sticky;top:0;height:100vh;overflow:hidden;color:#fff;display:flex;flex-direction:column;
+  background:radial-gradient(700px 400px at 20% 30%,rgba(37,201,242,.12),transparent 70%),linear-gradient(160deg,#0a2a5e 0%,#0c3f7d 55%,#0d4a8f 100%)}
+.glow{position:absolute;right:-90px;top:-120px;width:320px;height:320px;border-radius:50%;background:linear-gradient(180deg,#1a8fb5,#0f6e9e);opacity:.9;animation:bob 9s ease-in-out infinite alternate}
+.orbit{position:absolute;right:-150px;top:-180px;width:440px;height:440px;animation:spin 70s linear infinite}
+.wave{position:absolute;right:-140px;bottom:-150px;width:540px;height:340px;border-radius:50%;background:#1160b4;opacity:.45}
+.brand{position:relative;display:flex;align-items:center;gap:14px;padding:40px 56px 0;font-size:20px;font-weight:800;letter-spacing:-.01em;animation:fadedown .7s .1s backwards}
+.brand svg{width:46px;height:46px}
+.main{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 56px clamp(120px,22vh,230px)}
+.hl{font-size:clamp(34px,3.7vw,56px);font-weight:800;line-height:1.14;letter-spacing:-.025em}
+.hl span{display:block;animation:rise2 .8s cubic-bezier(.2,.8,.2,1) backwards}
+.hl span:nth-child(1){animation-delay:.2s}.hl span:nth-child(2){animation-delay:.34s}.hl span:nth-child(3){animation-delay:.48s}
+.hl em{font-style:normal;color:var(--cyan)}
+.sub{margin-top:26px;max-width:440px;border-left:3px solid var(--cyan);padding-left:22px;line-height:1.9;font-size:16px;color:#d2e2f6;animation:rise2 .8s .65s backwards}
+.feat{display:flex;flex-wrap:wrap;gap:18px 0;margin-top:44px;padding:0;list-style:none}
+.feat li{display:flex;align-items:center;gap:12px;padding:0 24px;border-left:1px solid rgba(255,255,255,.2);font-size:13.5px;line-height:1.4;color:#d6e4f7;animation:rise2 .7s backwards}
+.feat li:first-child{padding-left:0;border:0}
+.feat li:nth-child(1){animation-delay:.85s}.feat li:nth-child(2){animation-delay:.97s}.feat li:nth-child(3){animation-delay:1.09s}
+.feat svg{width:30px;height:30px;color:var(--cyan);flex:none}
+.ill{position:absolute;left:0;bottom:0;height:clamp(200px,34vh,330px);pointer-events:none}
+.ill svg{height:100%;width:auto;display:block}
+.bk{animation:bookdrop .8s cubic-bezier(.3,1.4,.5,1) backwards}
+.b1{animation-delay:.5s}.b2{animation-delay:.75s}.b3{animation-delay:1s}
+.cup{animation:fade .8s 1.25s backwards}
+.pens{transform-origin:369px 178px;animation:sway 7s ease-in-out infinite}
+.leaf{transform-origin:20px 262px;animation:leafsway 6s ease-in-out infinite alternate}
+.leaf.l2{animation-duration:8s;animation-delay:-2s}.leaf.l3{animation-duration:7s;animation-delay:-4s}
+
+/* ================= KANAN ================= */
+.rpane{position:relative;overflow:hidden;display:grid;place-items:center;padding:40px 24px;background:linear-gradient(180deg,#f6faff,#eef5fe)}
+.blob{position:absolute;background:#dbe9fc;border-radius:48% 52% 45% 55%;animation:bob 11s ease-in-out infinite alternate}
+.blob.a{width:300px;height:300px;right:-100px;top:-120px}
+.blob.b{width:280px;height:280px;right:-80px;bottom:-130px;animation-delay:-5s}
+.lcard{position:relative;width:100%;max-width:520px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(20,70,140,.12);padding:22px 40px 30px;animation:cardin .8s .15s cubic-bezier(.2,.8,.2,1) backwards}
+.emb{width:92px;height:92px;border-radius:50%;background:#dbe9fc;display:grid;place-items:center;margin:0 auto 14px}
+.emb i{width:66px;height:66px;border-radius:50%;background:linear-gradient(180deg,#3b82f6,#1e63e0);display:grid;place-items:center;box-shadow:0 6px 16px rgba(30,99,224,.35)}
+.emb svg{width:34px;height:34px;transform-origin:50% 60%;animation:toss 1.5s .9s cubic-bezier(.3,.7,.4,1)}
+.view.enter{animation:vin .45s cubic-bezier(.2,.8,.2,1)}
+.view h2{text-align:center;font-size:27px;font-weight:800;letter-spacing:-.02em}
+.view .lead{text-align:center;color:var(--mut);font-size:15px;margin:10px 0 26px;line-height:1.5}
+.lg label{display:block;gap:0;font-size:14.5px;font-weight:800;color:var(--ink);margin-bottom:8px}
+.fld{margin-bottom:18px}
+.inp{display:flex;align-items:center;height:54px;background:#f1f6fd;border:1px solid var(--line);border-radius:12px;color:#6b86a8;transition:border-color .2s,background .2s,box-shadow .2s,color .2s}
+.inp:focus-within{background:#fff;border-color:#2f7cf6;color:var(--blue);box-shadow:0 0 0 4px rgba(47,124,246,.14)}
+.inp .fi{width:50px;display:grid;place-items:center;flex:none}
+.inp .fi svg,.eye svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.inp input,.inp select{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;font-size:15px;color:var(--ink);padding:0 14px 0 0}
+.inp input::placeholder{color:#8da2bf}
+.inp.pl{height:48px}.inp.pl input,.inp.pl select{padding:0 14px}
+.eye{width:50px;height:100%;border:0;background:none;color:#6b86a8;cursor:pointer;display:grid;place-items:center;border-radius:0 12px 12px 0;transition:color .2s}
+.eye:hover,.eye:focus-visible{color:var(--blue);outline:0}
+.opts{display:flex;justify-content:space-between;align-items:center;margin:2px 0 20px}
+.lg label.chk{display:flex;flex-direction:row;align-items:center;gap:10px;margin:0;font-size:14px;font-weight:600;cursor:pointer;position:relative}
+.chk input{position:absolute;opacity:0;width:0;height:0}
+.chk i{width:19px;height:19px;border:1.6px solid #9db3d1;border-radius:6px;background:#fff;display:grid;place-items:center;transition:background .2s,border-color .2s}
+.chk i::after{content:"";width:9px;height:5px;border:2.2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) scale(0);margin-top:-2px;transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.chk input:checked+i{background:var(--blue);border-color:var(--blue)}
+.chk input:checked+i::after{transform:rotate(-45deg) scale(1)}
+.chk input:focus-visible+i{box-shadow:0 0 0 4px rgba(47,124,246,.2)}
+.lnk{background:none;border:0;padding:0;color:var(--blue);font-weight:800;font-size:14px;cursor:pointer;position:relative}
+.lnk::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.lnk:hover::after,.lnk:focus-visible::after{transform:scaleX(1)}
+.lnk:focus-visible{outline:0}
+.emsg{min-height:20px;color:var(--red);font-size:13.5px;font-weight:600;margin-bottom:10px;text-align:center}
+.cta{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;height:54px;border:0;border-radius:12px;background:linear-gradient(180deg,#1b6fe6,#1259c8);color:#fff;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 10px 22px rgba(21,101,216,.3);transition:transform .2s,box-shadow .2s,background .3s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(21,101,216,.38)}
+.cta:active{transform:scale(.98)}
+.cta:focus-visible{outline:3px solid #b9d7ff;outline-offset:2px}
+.cta:disabled{cursor:progress;transform:none}
+.cta .ci svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:block;transition:transform .3s}
+.cta:hover .ci svg{transform:translateX(4px)}
+.cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);transform:skewX(-20deg);transition:left .6s}
+.cta:hover::after{left:130%}
+.cta .sp{display:none;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.cta.busy .sp{display:block}.cta.busy .ci{display:none}
+.cta.ok{background:linear-gradient(180deg,#22b573,#169a5f);box-shadow:0 10px 22px rgba(22,154,95,.32)}
+.cta.ok .ci svg{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+.foot{margin-top:24px;padding-top:20px;border-top:1px solid #e6eef9;text-align:center;font-size:14px;color:var(--mut)}
+.foot .lnk{margin-left:4px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.grid2 .fld{min-width:0}
+.grid2 .full{grid-column:1/-1}
+.shk.shake{animation:shake .45s}
+
+/* ================= Keyframes ================= */
+@keyframes fade{from{opacity:0}}
+@keyframes fadedown{from{opacity:0;transform:translateY(-14px)}}
+@keyframes rise2{from{opacity:0;transform:translateY(24px)}}
+@keyframes cardin{from{opacity:0;transform:translateY(34px) scale(.97)}}
+@keyframes vin{from{opacity:0;transform:translateX(18px)}}
+@keyframes bookdrop{from{opacity:0;transform:translateY(-90px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{to{transform:translate(-14px,16px)}}
+@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+@keyframes leafsway{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+@keyframes toss{0%{transform:none}35%{transform:translateY(-16px) rotate(200deg)}70%{transform:translateY(-3px) rotate(360deg)}100%{transform:rotate(360deg)}}
+@keyframes pop{from{transform:scale(0)}}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+
+/* ================= Responsif ================= */
+@media(max-width:900px){
+  .lg-wrap{grid-template-columns:1fr}
+  .left{position:relative;height:auto}
+  .main{padding:30px 28px 38px}.brand{padding:28px 28px 0}
+  .ill,.orbit{display:none}.glow{width:220px;height:220px;right:-70px;top:-90px}
+  .hl{font-size:34px}.sub{font-size:15px}.feat{margin-top:28px}
+  .rpane{padding:28px 16px 40px}
+}
+@media(max-width:560px){
+  .feat{display:none}.lcard{padding:20px 22px 26px}.grid2{grid-template-columns:minmax(0,1fr)}
+}
+</style></head>
+<body class="lg">
+<main class="lg-wrap">
+
+  <!-- ===== Panel kiri ===== -->
+  <section class="left" aria-hidden="false">
+    <div class="glow"></div>
+    <svg class="orbit" viewBox="0 0 420 420" aria-hidden="true"><circle cx="210" cy="210" r="190" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5" stroke-dasharray="6 9"/><circle cx="210" cy="20" r="5.5" fill="#25c9f2"/></svg>
+    <div class="wave"></div>
+
+    <header class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 4 22l28 14 28-14L32 8Z" fill="#fff"/><path d="M14 31v13c0 4 8 9 18 9s18-5 18-9V31L32 40 14 31Z" fill="#9fd0ff"/><path d="M56 25v18" stroke="#25c9f2" stroke-width="3" stroke-linecap="round"/></svg>
+      <span>Portal Data Siswa</span>
+    </header>
+
+    <div class="main">
+      <h1 class="hl"><span>Data siswa,</span><span><em>rapi</em> dalam satu</span><span>tempat.</span></h1>
+      <p class="sub">Masuk untuk melihat profilmu, atau kelola data siswa sebagai admin.</p>
+      <ul class="feat">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.6 3.2 8.2 8 9 4.8-.8 8-4.4 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Aman<br>&amp; Terpercaya</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><span>Akses Cepat<br>&amp; Mudah</span></li>
+        <li><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6Z"/><circle cx="17.5" cy="9" r="2.4"/><path d="M17.2 14.3c2.5.2 4.3 2 4.3 4.7h-4.1c0-1.8-.1-3.4-.2-4.7Z"/></svg><span>Untuk Siswa<br>&amp; Admin</span></li>
+      </ul>
+    </div>
+
+    <div class="ill" aria-hidden="true">
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="wood" x1="0" x2="1"><stop offset="0" stop-color="#8e5f47"/><stop offset="1" stop-color="#c58d69"/></linearGradient>
+          <linearGradient id="cupg" x1="0" x2="1"><stop offset="0" stop-color="#c3d0e0"/><stop offset=".5" stop-color="#f0f4fa"/><stop offset="1" stop-color="#aebdd2"/></linearGradient>
+        </defs>
+        <path d="M0 282H440Q480 282 510 320H0Z" fill="url(#wood)"/>
+        <rect y="304" width="470" height="16" fill="#6e4838" opacity=".45"/>
+        <!-- tanaman -->
+        <g class="leaf"><path d="M20 262C-10 210-4 140 34 86 58 146 54 214 20 262Z" fill="#2f8f5b" opacity=".92"/></g>
+        <g class="leaf l2"><path d="M26 262C40 200 80 150 126 130 124 190 86 238 26 262Z" fill="#1f7049" opacity=".95"/></g>
+        <g class="leaf l3"><path d="M14 262C0 224-26 196-32 164 16 172 32 212 14 262Z" fill="#3aa56a" opacity=".85"/></g>
+        <!-- buku -->
+        <g class="bk b1"><rect x="0" y="236" width="300" height="46" rx="4" fill="#15508f"/><rect x="12" y="243" width="282" height="32" fill="#efe8da"/><path d="M12 251h282M12 259h282M12 267h282" stroke="#d7ccb8" stroke-width="1.2"/><rect x="0" y="236" width="12" height="46" rx="3" fill="#0e3f77"/></g>
+        <g class="bk b2"><rect x="14" y="192" width="270" height="44" rx="4" fill="#2468b3"/><rect x="26" y="199" width="252" height="30" fill="#f1ebdf"/><path d="M26 207h252M26 215h252M26 222h252" stroke="#d9cfbb" stroke-width="1.2"/><rect x="14" y="192" width="12" height="44" rx="3" fill="#1a5499"/></g>
+        <g class="bk b3"><rect x="30" y="150" width="236" height="42" rx="4" fill="#1b5aa5"/><rect x="42" y="157" width="218" height="28" fill="#efe8da"/><path d="M42 165h218M42 172h218M42 179h218" stroke="#d7ccb8" stroke-width="1.2"/><rect x="30" y="150" width="12" height="42" rx="3" fill="#134583"/></g>
+        <!-- tempat pensil -->
+        <g class="cup">
+          <g class="pens">
+            <g transform="rotate(-14 345 178)"><rect x="341" y="84" width="9" height="100" fill="#d9a15f"/><path d="M341 84 345.5 66 350 84Z" fill="#f1d3a8"/><path d="M343.8 73.5 345.5 66 347.2 73.5Z" fill="#2a3442"/></g>
+            <g transform="rotate(7 372 178)"><rect x="368" y="66" width="9" height="118" fill="#34425a"/><path d="M368 66 372.5 48 377 66Z" fill="#e6d3b6"/><path d="M370.8 55.5 372.5 48 374.2 55.5Z" fill="#2a3442"/></g>
+            <g transform="rotate(20 392 178)"><rect x="388" y="92" width="9" height="92" fill="#b86f4a"/><path d="M388 92 392.5 75 397 92Z" fill="#f1d3a8"/><path d="M390.8 81.5 392.5 75 394.2 81.5Z" fill="#2a3442"/></g>
+          </g>
+          <rect x="330" y="178" width="78" height="104" rx="10" fill="url(#cupg)"/>
+          <ellipse cx="369" cy="178" rx="39" ry="7" fill="#e3eaf4"/><ellipse cx="369" cy="179" rx="33" ry="4.5" fill="#8fa2bb"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===== Panel kanan ===== -->
+  <section class="rpane">
+    <div class="blob a"></div><div class="blob b"></div>
+    <div class="lcard">
+      <div class="emb"><i><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 3 1.5 8.5 12 14l8.5-4.45V15h2V8.5L12 3Z"/><path d="M5.5 12.6v4.1c0 1.6 3 3.3 6.5 3.3s6.5-1.7 6.5-3.3v-4.1L12 16.1 5.5 12.6Z"/></svg></i></div>
+      <div class="shk" id="shk">
+
+        <!-- Masuk -->
+        <div class="view" id="vl">
+          <h2>Selamat Datang Kembali</h2>
+          <p class="lead">Silakan masuk ke akun Anda untuk melanjutkan</p>
+          <form id="fl">
+            <div class="fld"><label for="em1">Email</label>
+              <div class="inp"><span class="fi"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7.5 8.5 6 8.5-6"/></svg></span>
+                <input id="em1" name="email" type="email" required autocomplete="username" placeholder="Masukkan email"></div></div>
+            <div class="fld"><label for="pw1">Password</label>
+              <div class="inp"><span class="fi"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg></span>
+                <input id="pw1" name="password" type="password" required autocomplete="current-password" placeholder="Masukkan password">
+                <button type="button" class="eye" id="eye" aria-label="Tampilkan password"></button></div></div>
+            <div class="opts">
+              <label class="chk"><input type="checkbox" id="rm"><i></i>Ingat saya</label>
+              <button type="button" class="lnk" id="forgot">Lupa kata sandi?</button>
+            </div>
+            <div class="emsg" id="e1" role="alert"></div>
+            <button class="cta" id="b1"><i class="sp"></i><span class="ci"></span><span class="ct">Masuk</span></button>
+          </form>
+          <div class="foot">Belum punya akun?<button type="button" class="lnk" id="goReg">Daftar sekarang</button></div>
+        </div>
+
+        <!-- Daftar -->
+        <div class="view" id="vr" hidden>
+          <h2>Buat Akun Baru</h2>
+          <p class="lead">Lengkapi data dirimu untuk mulai menggunakan portal</p>
+          <form id="fr">
+            <div class="grid2">
+              <div class="fld"><label for="r1">Nama lengkap</label><div class="inp pl"><input id="r1" name="name" required></div></div>
+              <div class="fld"><label for="r2">NISN</label><div class="inp pl"><input id="r2" name="nisn"></div></div>
+              <div class="fld"><label for="r3">Tempat, tanggal lahir</label><div class="inp pl"><input id="r3" name="ttl"></div></div>
+              <div class="fld"><label for="r4">Gender</label><div class="inp pl"><select id="r4" name="gender"><option>MALE</option><option>FEMALE</option></select></div></div>
+              <div class="fld"><label for="r5">Email</label><div class="inp pl"><input id="r5" name="email" type="email" required autocomplete="username"></div></div>
+              <div class="fld"><label for="r6">No. HP</label><div class="inp pl"><input id="r6" name="phone" type="tel" placeholder="08xxxxxxxxxx"></div></div>
+              <div class="fld full"><label for="r7">Alamat</label><div class="inp pl"><input id="r7" name="address"></div></div>
+              <div class="fld full"><label for="r8">Password (min. 6 karakter)</label><div class="inp pl"><input id="r8" name="password" type="password" minlength="6" required autocomplete="new-password"></div></div>
+            </div>
+            <div class="emsg" id="e2" role="alert"></div>
+            <button class="cta" id="b2"><i class="sp"></i><span class="ci"></span><span class="ct">Buat akun</span></button>
+          </form>
+          <div class="foot">Sudah punya akun?<button type="button" class="lnk" id="goLog">Masuk</button></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+<div id="toasts"></div>
+<script src="app.js"></script>
+<script>
+const IC = {
+  login: '<svg viewBox="0 0 24 24"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16l4-4-4-4M14 12H3"/></svg>',
+  add: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5S16 17 16 21M19 8v6M16 11h6"/></svg>',
+  check: '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  eye: '<svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff: '<svg viewBox="0 0 24 24"><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.7 8.4 2 12 2 12s3.6 7 10 7c1.7 0 3.2-.4 4.5-1M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></svg>'
+};
+$('#b1 .ci').innerHTML = IC.login; $('#b2 .ci').innerHTML = IC.add; $('#eye').innerHTML = IC.eye;
+
+// Lihat / sembunyikan password
+$('#eye').onclick = () => {
+  const show = $('#pw1').type == 'password';
+  $('#pw1').type = show ? 'text' : 'password';
+  $('#eye').innerHTML = show ? IC.eyeOff : IC.eye;
+  $('#eye').setAttribute('aria-label', show ? 'Sembunyikan password' : 'Tampilkan password');
+};
+
+// Pindah antara Masuk dan Daftar
+function show(n) {
+  $('#vl').hidden = n != 1; $('#vr').hidden = n != 2;
+  const v = n == 1 ? $('#vl') : $('#vr');
+  v.classList.remove('enter'); void v.offsetWidth; v.classList.add('enter');
+  $('#e1').textContent = ''; $('#e2').textContent = '';
+}
+$('#goReg').onclick = () => show(2); $('#goLog').onclick = () => show(1);
+$('#forgot').onclick = () => toast('Lupa kata sandi? Hubungi admin sekolah untuk mengatur ulang password-mu.');
+
+// Ingat saya: menyimpan email di browser ini saja
+try { const s = localStorage.getItem('ingat_email'); if (s) { $('#em1').value = s; $('#rm').checked = true; } } catch (e) {}
+
+const shake = () => { const s = $('#shk'); s.classList.remove('shake'); void s.offsetWidth; s.classList.add('shake'); };
+const go = (fid, act, eid, bid, okText) => $(fid).onsubmit = async e => {
+  e.preventDefault();
+  const er = $(eid), b = $(bid); er.textContent = '';
+  const data = Object.fromEntries(new FormData(e.target));
+  b.disabled = true; b.classList.add('busy');
+  const r = await api(act, data);
+  b.disabled = false; b.classList.remove('busy');
+  if (r.error) { er.textContent = r.error; shake(); return; }
+  if (act == 'login') { try { $('#rm').checked ? localStorage.setItem('ingat_email', data.email) : localStorage.removeItem('ingat_email'); } catch (x) {} }
+  b.disabled = true; b.classList.add('ok');
+  b.querySelector('.ci').innerHTML = IC.check; b.querySelector('.ct').textContent = okText;
+  setTimeout(() => location = r.role == 'admin' ? 'admin.html' : 'user.html', 650);
+};
+go('#fl', 'login', '#e1', '#b1', 'Berhasil masuk');
+go('#fr', 'register', '#e2', '#b2', 'Akun dibuat');
+
+const msg = sessionStorage.getItem('msg');
+if (msg) { sessionStorage.removeItem('msg'); setTimeout(() => toast(msg), 900); }
+api('me').then(r => { if (r.role) location = r.role == 'admin' ? 'admin.html' : 'user.html'; });
+</script></body></html>
